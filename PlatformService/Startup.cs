@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using PlatformService.Data;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace PlatformService
 {
@@ -28,7 +29,7 @@ namespace PlatformService
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "PlatformService", Version = "v1" });
             });
-
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IPlatformRepo, PlatformRepo>();
         }
 
@@ -52,6 +53,9 @@ namespace PlatformService
             {
                 endpoints.MapControllers();
             });
+
+            
+            PrepDb.PrepPopulation(app);
         }
     }
 }

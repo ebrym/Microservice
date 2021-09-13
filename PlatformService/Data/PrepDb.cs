@@ -9,28 +9,28 @@ namespace PlatformService.Data
 {
     public static class PrepDb
     {
-        public static void PrepPopulation(IApplicationBuilder app, bool isProd)
+        public static void PrepPopulation(IApplicationBuilder app)
         {
             using( var serviceScope = app.ApplicationServices.CreateScope())
             {
-                SeedData(serviceScope.ServiceProvider.GetService<AppDbContext>(), isProd);
+                SeedData(serviceScope.ServiceProvider.GetService<AppDbContext>());
             }
         }
 
-        private static void SeedData(AppDbContext context, bool isProd)
+        private static void SeedData(AppDbContext context)
         {
-            if(isProd)
-            {
-                Console.WriteLine("--> Attempting to apply migrations...");
-                try
-                {
-                    context.Database.Migrate();
-                }
-                catch(Exception ex)
-                {
-                    Console.WriteLine($"--> Could not run migrations: {ex.Message}");
-                }
-            }
+            // if(isProd)
+            // {
+            //     Console.WriteLine("--> Attempting to apply migrations...");
+            //     try
+            //     {
+            //         context.Database.Migrate();
+            //     }
+            //     catch(Exception ex)
+            //     {
+            //         Console.WriteLine($"--> Could not run migrations: {ex.Message}");
+            //     }
+            // }
             
             if(!context.Platforms.Any())
             {
@@ -39,7 +39,9 @@ namespace PlatformService.Data
                 context.Platforms.AddRange(
                     new Platform() {Name="Dot Net", Publisher="Microsoft", Cost="Free"},
                     new Platform() {Name="SQL Server Express", Publisher="Microsoft",  Cost="Free"},
-                    new Platform() {Name="Kubernetes", Publisher="Cloud Native Computing Foundation",  Cost="Free"}
+                    new Platform() {Name="Kubernetes", Publisher="Cloud Native Computing Foundation",  Cost="Free"},
+                    new Platform() {Name="Docker", Publisher="Containerization Computing tool",  Cost="Free"},
+                    new Platform() {Name="AKA", Publisher="Quick Replication and scalability tool",  Cost="Free"}
                 );
 
                 context.SaveChanges();
@@ -49,5 +51,10 @@ namespace PlatformService.Data
                 Console.WriteLine("--> We already have data");
             }
         }
+
+        // internal static void PrepPopulation(IApplicationBuilder app)
+        // {
+        //     throw new NotImplementedException();
+        // }
     }
 }
