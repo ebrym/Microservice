@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using PlatformService.Data;
 using PlatformService.Dtos;
 using PlatformService.Models;
-//using PlatformService.SyncDataServices.Http;
+using PlatformService.SyncDataServices.Http;
 
 namespace PlatformService.Controllers
 {
@@ -17,19 +17,19 @@ namespace PlatformService.Controllers
     {
         private readonly IPlatformRepo _repository;
         private readonly IMapper _mapper;
-        //private readonly ICommandDataClient _commandDataClient;
+        private readonly ICommandDataClient _commandDataClient;
         //private readonly IMessageBusClient _messageBusClient;
 
         public PlatformsController(
             IPlatformRepo repository, 
-            IMapper mapper
-           // ICommandDataClient commandDataClient,
+            IMapper mapper,
+            ICommandDataClient commandDataClient
             //IMessageBusClient messageBusClient
             )
         {
             _repository = repository;
             _mapper = mapper;
-            //_commandDataClient = commandDataClient;
+            _commandDataClient = commandDataClient;
             //_messageBusClient = messageBusClient;
         }
 
@@ -64,15 +64,15 @@ namespace PlatformService.Controllers
 
             var platformReadDto = _mapper.Map<PlatformReadDto>(platformModel);
 
-            // Send Sync Message
-            // try
-            // {
-            //     await _commandDataClient.SendPlatformToCommand(platformReadDto);
-            // }
-            // catch(Exception ex)
-            // {
-            //     Console.WriteLine($"--> Could not send synchronously: {ex.Message}");
-            // }
+           // Send Sync Message
+            try
+            {
+                await _commandDataClient.SendPlatformToCommand(platformReadDto);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"--> Could not send synchronously: {ex.Message}");
+            }
 
             //Send Async Message
             // try
